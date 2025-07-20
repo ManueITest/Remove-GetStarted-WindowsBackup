@@ -1,3 +1,10 @@
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent(
+    )).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    $scriptPath = $MyInvocation.MyCommand.Path
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`"" -Verb RunAs
+    exit
+}
+
 ### Installs Dependencies
 function Install-Dependencies {
     # Check if DotNET SQLite binaries exist
@@ -97,3 +104,6 @@ function Reload-Package {
 Remove-App-From-Package "WebExperienceHost" "MicrosoftWindows.Client.CBS"
 Remove-App-From-Package "WindowsBackup" "MicrosoftWindows.Client.CBS"
 Reload-Package "MicrosoftWindows.Client.CBS"
+
+Start-Sleep 5
+exit
